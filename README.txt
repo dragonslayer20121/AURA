@@ -32,7 +32,7 @@ BUILD A WINDOWS DESKTOP APP
 3. The executable is dist\AURA\AURA.exe.
 4. The shortcut is named AURA on your Windows Desktop.
 
-The build uses PyInstaller's onedir mode. This avoids the extra unpacking step of one-file mode and is generally easier to troubleshoot for Qt apps. Keep the whole dist\AURA folder together; the shortcut points to the executable inside it.
+The build creates an isolated .venv-build environment so unrelated packages from your main Python install are not bundled. It uses PyInstaller's onedir mode, avoiding the one-file extraction step at startup and making Qt troubleshooting easier. Keep the whole dist\AURA folder together; the shortcut points to the executable inside it.
 
 OVERLAYS
 - Toggle widgets from the dashboard.
@@ -55,7 +55,7 @@ DESIGN AND IMPLEMENTATION REFERENCES
 - PyInstaller documentation: windowed builds and executable icon options:
   https://pyinstaller.org/en/latest/usage.html
 
-These references informed the implementation choices: Qt-native translucent frameless overlays, audio capture on a separate thread, local audio processing, and a bundled executable with a Windows icon.
+Community packaging discussions also recommend using a clean virtual environment, avoiding one-file extraction for faster startup, and keeping app files together when a shortcut points to a fixed executable path:\n  https://www.reddit.com/r/learnpython/comments/1goohkv/\n  https://www.reddit.com/r/Python/comments/1nq3azn/\n\nThese references informed the implementation choices: Qt-native translucent frameless overlays, audio capture on a separate thread, local audio processing, an isolated build environment, and a bundled executable with a Windows icon.
 
 KNOWN LIMITATIONS
 - Lyrics are a visual placeholder; synced lyrics and media-provider integration are not implemented.
