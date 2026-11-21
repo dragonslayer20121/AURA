@@ -55,7 +55,11 @@ DESIGN AND IMPLEMENTATION REFERENCES
 - PyInstaller documentation: windowed builds and executable icon options:
   https://pyinstaller.org/en/latest/usage.html
 
-Community packaging discussions also recommend using a clean virtual environment, avoiding one-file extraction for faster startup, and keeping app files together when a shortcut points to a fixed executable path:\n  https://www.reddit.com/r/learnpython/comments/1goohkv/\n  https://www.reddit.com/r/Python/comments/1nq3azn/\n\nThese references informed the implementation choices: Qt-native translucent frameless overlays, audio capture on a separate thread, local audio processing, an isolated build environment, and a bundled executable with a Windows icon.
+Community packaging discussions also recommend using a clean virtual environment, avoiding one-file extraction for faster startup, and keeping app files together when a shortcut points to a fixed executable path:
+  https://www.reddit.com/r/learnpython/comments/1goohkv/
+  https://www.reddit.com/r/Python/comments/1nq3azn/
+
+These references informed the implementation choices: Qt-native translucent frameless overlays, audio capture on a separate thread, local audio processing, an isolated build environment, and a bundled executable with a Windows icon.
 
 KNOWN LIMITATIONS
 - Lyrics are a visual placeholder; synced lyrics and media-provider integration are not implemented.
