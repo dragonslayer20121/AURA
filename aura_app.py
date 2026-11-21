@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import sys
 from PyQt6.QtCore import Qt, QSettings
-from PyQt6.QtGui import QFont
+from pathlib import Path
+from PyQt6.QtGui import QFont, QIcon
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QFrame, QLabel, QPushButton,
     QVBoxLayout, QHBoxLayout, QStackedWidget, QCheckBox, QGridLayout,
@@ -18,6 +19,11 @@ PANEL_ALT = "#1b1524"
 ACCENT = "#ff3b91"
 TEXT = "#f5edf8"
 MUTED = "#a99ab5"
+
+
+def app_asset(name):
+    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    return str(base / "assets" / name)
 
 
 class Toggle(QCheckBox):
@@ -59,6 +65,7 @@ class AURAWindow(QMainWindow):
         super().__init__()
         self.settings = QSettings("Aayush", "AURA")
         self.setWindowTitle("AURA Control Center")
+        self.setWindowIcon(QIcon(app_asset("aura.ico")))
         self.resize(1040, 680)
         self.setMinimumSize(850, 560)
 
@@ -282,6 +289,7 @@ class AURAWindow(QMainWindow):
 def main():
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
+    app.setWindowIcon(QIcon(app_asset("aura.ico")))
     window = AURAWindow()
     window.show()
     window.clock.setVisible(window.clock_toggle.isChecked())
