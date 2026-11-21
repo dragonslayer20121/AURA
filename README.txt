@@ -50,6 +50,8 @@ DESIGN AND IMPLEMENTATION REFERENCES
   https://doc.qt.io/qt-6/qwidget.html
 - PyAudioWPatch project: use the WASAPI loopback analogue of the active output device:
   https://github.com/s0d3s/PyAudioWPatch
+- PyAudioWPatch maintainer discussion: keep WASAPI/PyAudio stream creation and use within the same worker thread rather than passing the stream across threads:
+  https://github.com/s0d3s/PyAudioWPatch/issues/23
 - Microsoft WASAPI loopback overview:
   https://learn.microsoft.com/en-us/windows/win32/coreaudio/loopback-recording
 - PyInstaller documentation: windowed builds and executable icon options:
