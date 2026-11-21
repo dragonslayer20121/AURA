@@ -1,43 +1,64 @@
-PROJECT AURA — DESKTOP CONTROL CENTER
-======================================
+AURA — WINDOWS DESKTOP CUSTOMIZATION
+=====================================
 
-A lightweight Windows desktop companion built with Python and PyQt6.
+AURA is a local-first Windows desktop companion with a dark control center and lightweight floating overlays.
 
-CURRENT FEATURES
-- Dark control-center dashboard with Widgets, Audio, Full screen, Profiles, and System pages
-- Digital clock overlay (toggle, drag to move, right-click to close)
-- Circular audio ring overlay using Windows WASAPI loopback
+WHAT'S INCLUDED
+- Dashboard tabs: Widgets, Audio, Full screen, Profiles, and System
+- Digital clock overlay
+- Circular ring visualizer using Windows WASAPI loopback
 - Lyrics placeholder overlay
-- Quick profiles: Minimal, Audio mode, All widgets
-- Audio is processed locally; AURA does not record or upload it
+- Saved widget toggles and quick profiles
+- Custom AURA logo and Windows app icon
+- Windows executable build + automatic Desktop shortcut
 
-IMPORTANT WINDOWS NOTE
-The overlays are transparent and stay above regular windows. Windows does not provide a simple portable API to pin a normal app window behind desktop icons, so this version is not a true wallpaper-layer widget.
-
-INSTALL
-1. Install Python 3.10 or newer from python.org. During setup, enable "Add Python to PATH".
-2. Open the AURA folder in File Explorer.
+FIRST RUN (SOURCE)
+1. Install Python 3.10+ for Windows from https://www.python.org/downloads/
+   During installation, enable "Add Python to PATH".
+2. Open the AURA repository folder in File Explorer.
 3. Click the address bar, type cmd, and press Enter.
 4. Run:
+   py -m pip install --upgrade pip
    py -m pip install -r requirements.txt
+5. Start:
+   py aura_app.py
 
-RUN
-- Double-click Start_AURA.vbs for a background launch.
-- Or double-click Run_AURA.bat to see errors in a terminal.
+Double-click Start_AURA.vbs for a background launch.
+Run_AURA.bat opens a console so errors can be read.
+
+BUILD A WINDOWS DESKTOP APP
+1. Double-click Build_AURA.bat from the AURA folder.
+2. It installs build-only tools, creates the icon, packages AURA, and creates a Desktop shortcut.
+3. The executable is dist\AURA\AURA.exe.
+4. The shortcut is named AURA on your Windows Desktop.
+
+The build uses PyInstaller's onedir mode. This avoids the extra unpacking step of one-file mode and is generally easier to troubleshoot for Qt apps. Keep the whole dist\AURA folder together; the shortcut points to the executable inside it.
+
+OVERLAYS
+- Toggle widgets from the dashboard.
+- Drag overlays with the left mouse button.
+- Right-click an overlay to close it.
+- Overlays are frameless and transparent. They float above normal windows; they are not pinned behind desktop icons as a true wallpaper layer.
 
 AUDIO
-The ring captures the current Windows output audio with WASAPI loopback.
-If audio capture is unavailable, check that Windows has an active output device and that the required packages installed successfully.
+AURA captures the Windows output mix through WASAPI loopback. Audio is processed locally for the live visualizer; AURA does not save or upload audio. If the ring is silent, check that Windows has an active output device and review the console for capture errors.
 
-CONTROLS
-- Toggle overlays from the Widgets page.
-- Drag an overlay with the left mouse button.
-- Right-click an overlay to close it.
-- Quit AURA from the System page.
+DESIGN AND IMPLEMENTATION REFERENCES
+- Qt documentation: translucent windows require a frameless top-level window on Windows:
+  https://doc.qt.io/qt-6/qwidget.html
+- Qt documentation: Qt's non-native ("alien") widgets can improve painting/resizing and reduce flicker:
+  https://doc.qt.io/qt-6/qwidget.html
+- PyAudioWPatch project: use the WASAPI loopback analogue of the active output device:
+  https://github.com/s0d3s/PyAudioWPatch
+- Microsoft WASAPI loopback overview:
+  https://learn.microsoft.com/en-us/windows/win32/coreaudio/loopback-recording
+- PyInstaller documentation: windowed builds and executable icon options:
+  https://pyinstaller.org/en/latest/usage.html
 
-NEXT
-- Lyrics provider and media integration
-- Full-screen experience
-- More overlay themes and saved positions
+These references informed the implementation choices: Qt-native translucent frameless overlays, audio capture on a separate thread, local audio processing, and a bundled executable with a Windows icon.
 
-The original AURA.py prototype is preserved in the repository.
+KNOWN LIMITATIONS
+- Lyrics are a visual placeholder; synced lyrics and media-provider integration are not implemented.
+- Full-screen wallpaper scenes are planned, not active yet.
+- Audio capture and packaged launch still need testing on the target Windows machine and selected output device.
+- AURA is not a true desktop wallpaper-layer widget.
