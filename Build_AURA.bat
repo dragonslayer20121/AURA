@@ -1,18 +1,25 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-echo [AURA] Installing runtime and build dependencies...
-py -m pip install -r requirements.txt
+
+if not exist ".venv-build\Scripts\python.exe" (
+  echo [AURA] Creating an isolated build environment...
+  py -m venv .venv-build
+  if errorlevel 1 goto failed
+)
+
+echo [AURA] Installing AURA and build tools into the isolated environment...
+".venv-build\Scripts\python.exe" -m pip install --upgrade pip
 if errorlevel 1 goto failed
-py -m pip install -r requirements-build.txt
+".venv-build\Scripts\python.exe" -m pip install -r requirements.txt -r requirements-build.txt
 if errorlevel 1 goto failed
 
 echo [AURA] Creating app icon...
-py tools\generate_icon.py
+".venv-build\Scripts\python.exe" tools\generate_icon.py
 if errorlevel 1 goto failed
 
 echo [AURA] Packaging AURA as a Windows desktop app...
-py -m PyInstaller --noconfirm --clean --windowed --onedir --name AURA --icon assets\aura.ico --add-data "assets;assets" aura_app.py
+".venv-build\Scripts\python.exe" -m PyInstaller --noconfirm --clean --windowed --onedir --name AURA --icon assets\aura.ico --add-data "assets;assets" aura_app.py
 if errorlevel 1 goto failed
 
 echo [AURA] Creating desktop shortcut...
