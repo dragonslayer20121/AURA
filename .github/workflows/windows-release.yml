@@ -26,6 +26,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt -r requirements-build.txt
 
+      - name: Check Python syntax
+        run: python -m compileall -q aura aura_app.py
+
       - name: Generate Windows icon
         run: python tools/generate_icon.py
 
