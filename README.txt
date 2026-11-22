@@ -3,14 +3,24 @@ AURA — WINDOWS DESKTOP CUSTOMIZATION
 
 AURA is a local-first Windows desktop companion with a dark control center and lightweight floating overlays.
 
-WHAT'S INCLUDED
+FEATURES
 - Dashboard tabs: Widgets, Audio, Full screen, Profiles, and System
 - Digital clock overlay
-- Circular ring visualizer using Windows WASAPI loopback
-- Lyrics placeholder overlay
-- Saved widget toggles and quick profiles
+- Circular audio visualizer using Windows WASAPI loopback
+- Local .LRC lyrics overlay with manual start/pause/reset sync
+- Full-screen animated ambient clock/ring scene (Esc or right-click to exit)
+- Built-in and user-saved widget profiles
+- Saved widget toggles and visualizer sensitivity
+- Audio capture error feedback in the dashboard
+- Reset overlay positions
 - Custom AURA logo and Windows app icon
 - Windows executable build + automatic Desktop shortcut
+
+LYRICS
+AURA loads user-provided .LRC files. Choose Load .LRC, then Start sync when the song starts. Pause or reset the manual timer as needed. This is not automatic player/media synchronization yet; lyric timing depends on manually starting the timer.
+
+FULL-SCREEN SCENE
+The Full screen tab launches an animated fullscreen clock and neon ring. Press Esc or right-click to exit. This is an ambient overlay, not a wallpaper pinned behind desktop icons.
 
 FIRST RUN (SOURCE)
 1. Install Python 3.10+ for Windows from https://www.python.org/downloads/
@@ -32,7 +42,7 @@ BUILD A WINDOWS DESKTOP APP
 3. The executable is dist\AURA\AURA.exe.
 4. The shortcut is named AURA on your Windows Desktop.
 
-The build creates an isolated .venv-build environment so unrelated packages from your main Python install are not bundled. It uses PyInstaller's onedir mode, avoiding the one-file extraction step at startup and making Qt troubleshooting easier. Keep the whole dist\AURA folder together; the shortcut points to the executable inside it.
+The build creates an isolated .venv-build environment so unrelated packages from your main Python install are not bundled. It uses PyInstaller's onedir mode. Keep the whole dist\AURA folder together; the shortcut points to the executable inside it.
 
 OVERLAYS
 - Toggle widgets from the dashboard.
@@ -41,30 +51,9 @@ OVERLAYS
 - Overlays are frameless and transparent. They float above normal windows; they are not pinned behind desktop icons as a true wallpaper layer.
 
 AUDIO
-AURA captures the Windows output mix through WASAPI loopback. Audio is processed locally for the live visualizer; AURA does not save or upload audio. If the ring is silent, check that Windows has an active output device and review the console for capture errors.
-
-DESIGN AND IMPLEMENTATION REFERENCES
-- Qt documentation: translucent windows require a frameless top-level window on Windows:
-  https://doc.qt.io/qt-6/qwidget.html
-- Qt documentation: Qt's non-native ("alien") widgets can improve painting/resizing and reduce flicker:
-  https://doc.qt.io/qt-6/qwidget.html
-- PyAudioWPatch project: use the WASAPI loopback analogue of the active output device:
-  https://github.com/s0d3s/PyAudioWPatch
-- PyAudioWPatch maintainer discussion: keep WASAPI/PyAudio stream creation and use within the same worker thread rather than passing the stream across threads:
-  https://github.com/s0d3s/PyAudioWPatch/issues/23
-- Microsoft WASAPI loopback overview:
-  https://learn.microsoft.com/en-us/windows/win32/coreaudio/loopback-recording
-- PyInstaller documentation: windowed builds and executable icon options:
-  https://pyinstaller.org/en/latest/usage.html
-
-Community packaging discussions also recommend using a clean virtual environment, avoiding one-file extraction for faster startup, and keeping app files together when a shortcut points to a fixed executable path:
-  https://www.reddit.com/r/learnpython/comments/1goohkv/
-  https://www.reddit.com/r/Python/comments/1nq3azn/
-
-These references informed the implementation choices: Qt-native translucent frameless overlays, audio capture on a separate thread, local audio processing, an isolated build environment, and a bundled executable with a Windows icon.
+AURA captures the Windows output mix through WASAPI loopback. Audio is processed locally for the live visualizer; AURA does not save or upload audio. If the ring is silent, check that Windows has an active output device and read the Audio tab status message.
 
 KNOWN LIMITATIONS
-- Lyrics are a visual placeholder; synced lyrics and media-provider integration are not implemented.
-- Full-screen wallpaper scenes are planned, not active yet.
-- Audio capture and packaged launch still need testing on the target Windows machine and selected output device.
-- AURA is not a true desktop wallpaper-layer widget.
+- Lyrics are local LRC files with manual timer sync; automatic media-player sync and online lyric search are not implemented.
+- The full-screen scene is an animated overlay, not a wallpaper engine.
+- Audio capture must be tested with the user's Windows output device.
