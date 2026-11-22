@@ -1,0 +1,55 @@
+name: Build AURA for Windows
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install app and build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -r requirements-build.txt
+
+      - name: Generate Windows icon
+        run: python tools/generate_icon.py
+
+      - name: Package AURA
+        run: |
+          python -m PyInstaller --noconfirm --clean --windowed --onedir --name AURA --icon assets/aura.ico --add-data "assets;assets" aura_app.py
+
+      - name: Create user-friendly ZIP
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "dist/AURA/*" -DestinationPath "AURA-Windows.zip" -Force
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AURA-Windows
+          path: AURA-Windows.zip
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: AURA ${{ github.ref_name }}
+          generate_release_notes: true
+          files: AURA-Windows.zip
+          prerelease: ${{ contains(github.ref_name, '-') }}
